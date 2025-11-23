@@ -7,22 +7,23 @@ interface Product {
   name: string;
   category: string;
   description: string;
+  image: string;
 }
 
 const defaultProducts: Product[] = [
-  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: 'Bàn ăn 6 người, gỗ sồi tự nhiên' },
-  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: 'Gỗ óc chó, ngăn chứa rộng rãi' },
-  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: 'Giường 1m8, kèm ngăn chứa đồ' },
-  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: 'Thiết kế tối giản, gỗ tần bì' },
-  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: 'Gỗ thông, có ngăn kéo' },
-  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: 'Gỗ sồi kèm đệm, Scandinavian' },
+  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: 'Bàn ăn 6 người, gỗ sồi tự nhiên', image: '' },
+  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: 'Gỗ óc chó, ngăn chứa rộng rãi', image: '' },
+  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: 'Giường 1m8, kèm ngăn chứa đồ', image: '' },
+  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: 'Thiết kế tối giản, gỗ tần bì', image: '' },
+  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: 'Gỗ thông, có ngăn kéo', image: '' },
+  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: 'Gỗ sồi kèm đệm, Scandinavian', image: '' },
 ];
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [formData, setFormData] = useState({ name: '', category: '', description: '' });
+  const [formData, setFormData] = useState({ name: '', category: '', description: '', image: '' });
 
   useEffect(() => {
     const saved = localStorage.getItem('mocviet-products');
@@ -43,7 +44,7 @@ export default function AdminPage() {
       ...formData,
     };
     saveProducts([...products, newProduct]);
-    setFormData({ name: '', category: '', description: '' });
+    setFormData({ name: '', category: '', description: '', image: '' });
     setIsAdding(false);
   };
 
@@ -54,7 +55,7 @@ export default function AdminPage() {
     );
     saveProducts(updated);
     setEditingProduct(null);
-    setFormData({ name: '', category: '', description: '' });
+    setFormData({ name: '', category: '', description: '', image: '' });
   };
 
   const handleDelete = (id: string) => {
@@ -69,6 +70,7 @@ export default function AdminPage() {
       name: product.name,
       category: product.category,
       description: product.description,
+      image: product.image || '',
     });
     setIsAdding(false);
   };
@@ -76,13 +78,13 @@ export default function AdminPage() {
   const startAdd = () => {
     setIsAdding(true);
     setEditingProduct(null);
-    setFormData({ name: '', category: '', description: '' });
+    setFormData({ name: '', category: '', description: '', image: '' });
   };
 
   const cancelForm = () => {
     setIsAdding(false);
     setEditingProduct(null);
-    setFormData({ name: '', category: '', description: '' });
+    setFormData({ name: '', category: '', description: '', image: '' });
   };
 
   return (
@@ -128,6 +130,33 @@ export default function AdminPage() {
                   <option value="Giường">Giường</option>
                   <option value="Khác">Khác</option>
                 </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  URL hình ảnh
+                </label>
+                <input
+                  type="text"
+                  value={formData.image}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none"
+                  placeholder="https://example.com/hinh-san-pham.jpg"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Upload hình lên Imgur, Cloudinary,... rồi dán link vào đây
+                </p>
+                {formData.image && (
+                  <div className="mt-2">
+                    <img
+                      src={formData.image}
+                      alt="Preview"
+                      className="w-32 h-24 object-cover rounded-lg border"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -181,8 +210,30 @@ export default function AdminPage() {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 transition-colors"
               >
+                {/* Thumbnail */}
+                <div className="w-16 h-16 bg-sky-100 rounded-lg overflow-hidden flex-shrink-0">
+                  {product.image ? (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '';
+                        (e.target as HTMLImageElement).className = 'hidden';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <svg className="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-gray-800 truncate">{product.name}</h3>
                   <div className="flex items-center gap-3 mt-1">
@@ -192,7 +243,9 @@ export default function AdminPage() {
                     <span className="text-sm text-gray-500 truncate">{product.description}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 ml-4">
+
+                {/* Actions */}
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => startEdit(product)}
                     className="p-2 text-gray-400 hover:text-sky-500 hover:bg-sky-50 rounded-lg transition-colors"

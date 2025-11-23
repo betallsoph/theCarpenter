@@ -7,19 +7,23 @@ interface Product {
   name: string;
   category: string;
   description: string;
+  image?: string;
 }
 
 const defaultProducts: Product[] = [
-  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: '' },
-  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: '' },
-  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: '' },
-  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: '' },
-  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: '' },
-  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: '' },
+  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: '', image: '' },
+  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: '', image: '' },
+  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: '', image: '' },
+  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: '', image: '' },
+  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: '', image: '' },
+  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: '', image: '' },
 ];
+
+const INITIAL_DISPLAY = 6;
 
 export default function ProductsSection() {
   const [products, setProducts] = useState<Product[]>(defaultProducts);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('mocviet-products');
@@ -27,6 +31,9 @@ export default function ProductsSection() {
       setProducts(JSON.parse(saved));
     }
   }, []);
+
+  const displayedProducts = showAll ? products : products.slice(0, INITIAL_DISPLAY);
+  const hasMore = products.length > INITIAL_DISPLAY;
 
   return (
     <section id="products" className="min-h-screen flex items-center bg-sky-50 py-24">
@@ -47,28 +54,36 @@ export default function ProductsSection() {
 
         {/* Products Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {displayedProducts.map((product) => (
             <div
               key={product.id}
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
             >
               {/* Image */}
               <div className="aspect-[4/3] bg-gradient-to-br from-sky-100 to-sky-200 relative overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center">
-                  <svg
-                    className="w-16 h-16 text-sky-300 group-hover:scale-110 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg
+                      className="w-16 h-16 text-sky-300 group-hover:scale-110 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                )}
 
                 {/* Category tag */}
                 <span className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-sky-600 text-xs font-medium rounded-full">
@@ -94,6 +109,32 @@ export default function ProductsSection() {
             </div>
           ))}
         </div>
+
+        {/* Show more button */}
+        {hasMore && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-sky-500 border border-sky-200 rounded-full font-medium hover:bg-sky-50 transition-colors"
+            >
+              {showAll ? (
+                <>
+                  Thu gọn
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  Xem thêm ({products.length - INITIAL_DISPLAY} sản phẩm)
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* CTA */}
         <div className="text-center mt-12">
