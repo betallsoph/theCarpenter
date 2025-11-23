@@ -1,21 +1,21 @@
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Products from "@/components/Products";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import MinimalHeader from "@/components/MinimalHeader";
+import DotNavigation from "@/components/DotNavigation";
+import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/AboutSection";
+import ProductsSection from "@/components/ProductsSection";
+import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
   return (
     <>
-      <Header />
+      <MinimalHeader />
+      <DotNavigation />
       <main>
-        <Hero />
-        <About />
-        <Products />
-        <Contact />
+        <HeroSection />
+        <AboutSection />
+        <ProductsSection />
+        <ContactSection />
       </main>
-      <Footer />
     </>
   );
 }
