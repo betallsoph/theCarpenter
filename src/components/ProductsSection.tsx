@@ -1,36 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  image?: string;
-}
-
-const defaultProducts: Product[] = [
-  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: '', image: '' },
-  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: '', image: '' },
-  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: '', image: '' },
-  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: '', image: '' },
-  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: '', image: '' },
-  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: '', image: '' },
-];
+import { useState } from 'react';
+import { products } from '@/data/products';
 
 const INITIAL_DISPLAY = 6;
 
 export default function ProductsSection() {
-  const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [showAll, setShowAll] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('mocviet-products');
-    if (saved) {
-      setProducts(JSON.parse(saved));
-    }
-  }, []);
 
   const displayedProducts = showAll ? products : products.slice(0, INITIAL_DISPLAY);
   const hasMore = products.length > INITIAL_DISPLAY;

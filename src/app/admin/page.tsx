@@ -1,40 +1,33 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  image: string;
-}
-
-const defaultProducts: Product[] = [
-  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: 'Bàn ăn 6 người, gỗ sồi tự nhiên', image: '' },
-  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: 'Gỗ óc chó, ngăn chứa rộng rãi', image: '' },
-  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: 'Giường 1m8, kèm ngăn chứa đồ', image: '' },
-  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: 'Thiết kế tối giản, gỗ tần bì', image: '' },
-  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: 'Gỗ thông, có ngăn kéo', image: '' },
-  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: 'Gỗ sồi kèm đệm, Scandinavian', image: '' },
-];
+import { useState } from 'react';
+import { products as initialProducts, Product } from '@/data/products';
 
 export default function AdminPage() {
-  const [products, setProducts] = useState<Product[]>(defaultProducts);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({ name: '', category: '', description: '', image: '' });
+  const [showCode, setShowCode] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('mocviet-products');
-    if (saved) {
-      setProducts(JSON.parse(saved));
-    }
-  }, []);
+  const generateCode = () => {
+    const code = `export const products: Product[] = [
+${products.map(p => `  {
+    id: '${p.id}',
+    name: '${p.name}',
+    category: '${p.category}',
+    description: '${p.description}',
+    image: '${p.image}',
+  }`).join(',\n')}
+];`;
+    return code;
+  };
 
-  const saveProducts = (newProducts: Product[]) => {
-    setProducts(newProducts);
-    localStorage.setItem('mocviet-products', JSON.stringify(newProducts));
+  const copyCode = () => {
+    navigator.clipboard.writeText(generateCode());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleAdd = () => {
@@ -43,24 +36,23 @@ export default function AdminPage() {
       id: Date.now().toString(),
       ...formData,
     };
-    saveProducts([...products, newProduct]);
+    setProducts([...products, newProduct]);
     setFormData({ name: '', category: '', description: '', image: '' });
     setIsAdding(false);
   };
 
   const handleUpdate = () => {
     if (!editingProduct || !formData.name.trim()) return;
-    const updated = products.map((p) =>
+    setProducts(products.map((p) =>
       p.id === editingProduct.id ? { ...p, ...formData } : p
-    );
-    saveProducts(updated);
+    ));
     setEditingProduct(null);
     setFormData({ name: '', category: '', description: '', image: '' });
   };
 
   const handleDelete = (id: string) => {
     if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-      saveProducts(products.filter((p) => p.id !== id));
+      setProducts(products.filter((p) => p.id !== id));
     }
   };
 
@@ -93,7 +85,24 @@ export default function AdminPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Quản lý sản phẩm</h1>
-          <p className="text-gray-500 mt-1">Thêm, sửa, xóa sản phẩm hiển thị trên trang web</p>
+          <p className="text-gray-500 mt-1">Thêm, sửa, xóa sản phẩm rồi copy code vào file products.ts</p>
+        </div>
+
+        {/* Export Code Button */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="text-amber-800 font-medium">Lưu ý</p>
+              <p className="text-amber-700 text-sm mt-1">
+                Sau khi chỉnh sửa xong, nhấn &quot;Lấy code&quot; rồi paste vào file <code className="bg-amber-100 px-1 rounded">src/data/products.ts</code>
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Add/Edit Form */}
@@ -133,18 +142,15 @@ export default function AdminPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  URL hình ảnh
+                  URL hình ảnh (Cloudinary)
                 </label>
                 <input
                   type="text"
                   value={formData.image}
                   onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none"
-                  placeholder="https://example.com/hinh-san-pham.jpg"
+                  placeholder="https://res.cloudinary.com/..."
                 />
-                <p className="text-xs text-gray-400 mt-1">
-                  Upload hình lên Imgur, Cloudinary,... rồi dán link vào đây
-                </p>
                 {formData.image && (
                   <div className="mt-2">
                     <img
@@ -188,17 +194,43 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Add Button */}
-        {!isAdding && !editingProduct && (
+        {/* Action Buttons */}
+        <div className="flex gap-3 mb-6">
+          {!isAdding && !editingProduct && (
+            <button
+              onClick={startAdd}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-sky-500 text-white rounded-xl font-medium hover:bg-sky-600 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Thêm sản phẩm
+            </button>
+          )}
           <button
-            onClick={startAdd}
-            className="mb-6 inline-flex items-center gap-2 px-5 py-2.5 bg-sky-500 text-white rounded-xl font-medium hover:bg-sky-600 transition-colors"
+            onClick={() => setShowCode(!showCode)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
             </svg>
-            Thêm sản phẩm
+            {showCode ? 'Ẩn code' : 'Lấy code'}
           </button>
+        </div>
+
+        {/* Code Export */}
+        {showCode && (
+          <div className="bg-gray-900 rounded-2xl p-4 mb-6 relative">
+            <button
+              onClick={copyCode}
+              className="absolute top-4 right-4 px-3 py-1.5 bg-gray-700 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              {copied ? 'Đã copy!' : 'Copy'}
+            </button>
+            <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap">
+              {generateCode()}
+            </pre>
+          </div>
         )}
 
         {/* Products List */}
@@ -219,10 +251,6 @@ export default function AdminPage() {
                       src={product.image}
                       alt={product.name}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '';
-                        (e.target as HTMLImageElement).className = 'hidden';
-                      }}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
