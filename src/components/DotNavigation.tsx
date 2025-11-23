@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 const sections = [
   { id: 'hero', label: 'Trang chủ' },
-  { id: 'about', label: 'Giới thiệu' },
   { id: 'products', label: 'Sản phẩm' },
   { id: 'contact', label: 'Liên hệ' },
 ];

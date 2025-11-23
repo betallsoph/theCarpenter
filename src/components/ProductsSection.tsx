@@ -1,12 +1,32 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+}
+
+const defaultProducts: Product[] = [
+  { id: '1', name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế', description: '' },
+  { id: '2', name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ', description: '' },
+  { id: '3', name: 'Giường ngủ gỗ xoan', category: 'Giường', description: '' },
+  { id: '4', name: 'Kệ tivi phòng khách', category: 'Tủ kệ', description: '' },
+  { id: '5', name: 'Bàn làm việc', category: 'Bàn ghế', description: '' },
+  { id: '6', name: 'Bộ sofa gỗ', category: 'Bàn ghế', description: '' },
+];
+
 export default function ProductsSection() {
-  const products = [
-    { name: 'Bàn ăn gỗ sồi', category: 'Bàn ghế' },
-    { name: 'Tủ quần áo 3 cánh', category: 'Tủ kệ' },
-    { name: 'Giường ngủ gỗ xoan', category: 'Giường' },
-    { name: 'Kệ tivi phòng khách', category: 'Tủ kệ' },
-    { name: 'Bàn làm việc', category: 'Bàn ghế' },
-    { name: 'Bộ sofa gỗ', category: 'Bàn ghế' },
-  ];
+  const [products, setProducts] = useState<Product[]>(defaultProducts);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('mocviet-products');
+    if (saved) {
+      setProducts(JSON.parse(saved));
+    }
+  }, []);
 
   return (
     <section id="products" className="min-h-screen flex items-center bg-sky-50 py-24">
@@ -27,9 +47,9 @@ export default function ProductsSection() {
 
         {/* Products Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product, i) => (
+          {products.map((product) => (
             <div
-              key={i}
+              key={product.id}
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
             >
               {/* Image */}
