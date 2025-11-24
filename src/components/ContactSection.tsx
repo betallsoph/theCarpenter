@@ -8,7 +8,18 @@ export default function ContactSection() {
         </svg>
       ),
       label: 'Địa chỉ',
-      value: '123 Đường ABC, Phường XYZ, Quận 1, TP.HCM',
+      content: (
+        <div className="space-y-3">
+          <div>
+            <p className="font-semibold text-gray-800">Mộc Tuấn Chim 24</p>
+            <p className="text-gray-600">24 Đào Duy Từ, Phường 4, Đà Lạt</p>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">Mộc Nhà Làm 117</p>
+            <p className="text-gray-600">117 Nguyễn Trung Trực, Phường 4, Đà Lạt</p>
+          </div>
+        </div>
+      ),
     },
     {
       icon: (
@@ -16,8 +27,23 @@ export default function ContactSection() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
         </svg>
       ),
-      label: 'Hotline',
-      value: '0901 234 567',
+      label: 'Liên hệ',
+      content: (
+        <div className="space-y-3">
+          <div>
+            <p className="font-semibold text-gray-800">Mộc Tuấn Chim 24</p>
+            <a href="tel:0393721138" className="text-gray-600 hover:text-sky-600 transition-colors">
+              039 372 1138
+            </a>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">Mộc Nhà Làm 117</p>
+            <a href="tel:123456789" className="text-gray-600 hover:text-sky-600 transition-colors">
+              123 456 789
+            </a>
+          </div>
+        </div>
+      ),
     },
     {
       icon: (
@@ -26,7 +52,7 @@ export default function ContactSection() {
         </svg>
       ),
       label: 'Giờ làm việc',
-      value: 'T2 - T7: 8:00 - 18:00',
+      content: <p className="font-medium text-gray-800">T2 - T7: 6:00 - 18:00</p>,
     },
   ];
 
@@ -46,20 +72,20 @@ export default function ContactSection() {
             </div>
 
             <p className="text-gray-600 text-lg leading-relaxed">
-              Xưởng mộc với hơn 20 năm kinh nghiệm, chuyên đóng đồ gỗ nội thất theo yêu cầu.
-              Cam kết chất lượng gỗ tự nhiên, tay nghề thủ công tinh xảo và bảo hành dài hạn.
+              Với hơn 20 năm kinh nghiệm, chuyên đóng đồ gỗ nội thất theo yêu cầu.
+              Sang tận nơi hoặc gọi điện để đặt đồ gỗ theo yêu cầu.
             </p>
 
             {/* Contact info */}
             <div className="space-y-4 pt-4">
               {contactInfo.map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
+                <div key={i} className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center text-sky-500">
                     {item.icon}
                   </div>
                   <div>
                     <p className="text-xs text-gray-400 uppercase tracking-wider">{item.label}</p>
-                    <p className="font-medium text-gray-800">{item.value}</p>
+                    <div className="mt-1">{item.content}</div>
                   </div>
                 </div>
               ))}
@@ -68,22 +94,13 @@ export default function ContactSection() {
             {/* CTA */}
             <div className="flex flex-wrap gap-4 pt-4">
               <a
-                href="tel:0901234567"
+                href="tel:0393721138"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-sky-500 text-white rounded-full font-medium hover:bg-sky-600 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 Gọi ngay
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-sky-50 text-sky-600 rounded-full font-medium hover:bg-sky-100 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z" />
-                </svg>
-                Facebook
               </a>
             </div>
           </div>
