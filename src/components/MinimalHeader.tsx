@@ -22,27 +22,15 @@ export default function MinimalHeader() {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <a href="#hero" className="flex items-center gap-3 group">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-            scrolled ? 'bg-sky-100' : 'bg-white/20 backdrop-blur-sm'
-          }`}>
-            <svg
-              className={`w-6 h-6 transition-colors ${scrolled ? 'text-sky-500' : 'text-white'}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </div>
+          <img
+            src="/logo/kkk.png"
+            alt="mộc nhà làm logo"
+            className="w-16 h-16 rounded-xl object-cover transition-transform group-hover:scale-105"
+          />
           <span className={`text-xl font-bold transition-colors ${
             scrolled ? 'text-gray-800' : 'text-white'
           }`}>
-            Mộc Việt
+            mộc nhà làm
           </span>
         </a>
 
