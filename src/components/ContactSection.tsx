@@ -41,7 +41,7 @@ export default function ContactSection() {
                 Về chúng tôi
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mt-3 leading-tight">
-                Mộc Việt
+                mộc nhà làm
               </h2>
             </div>
 
@@ -113,10 +113,6 @@ export default function ContactSection() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-20 pt-8 border-t border-gray-100 text-center text-gray-400 text-sm">
-          <p>&copy; 2024 Mộc Việt. Tất cả quyền được bảo lưu.</p>
-        </div>
       </div>
     </section>
   );

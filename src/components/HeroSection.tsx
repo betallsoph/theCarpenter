@@ -5,7 +5,7 @@ export default function HeroSection() {
       className="min-h-screen flex items-center relative overflow-hidden"
     >
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-sky-300 via-sky-400 to-sky-500" />
+      <div className="absolute inset-0 bg-gradient-to-b from-sky-500 via-sky-400 to-sky-300" />
 
       {/* Decorative shapes */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
